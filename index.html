@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Genix Highlight: A powerful syntax highlighter for your code examples.">
+    <meta name="author" content="Genix Development Team">
+    <meta name="keywords" content="Genix, Syntax Highlighter, JavaScript, CSS, HTML, Python">
+    <meta name="theme-color" content="#333333">
+    <title>Genix Highlight - Syntax Highlighter Demo</title>
+    <link rel="stylesheet" href="./dist/css/styles.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #333333;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        main {
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: #4caf50;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 0.5rem;
+        }
+
+        pre {
+            background-color: #2d2d2d;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+        }
+
+        footer {
+            background-color: #4caf50;
+            color: #ffffff;
+            text-align: center;
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+    </style>
+    <script src="./dist/js/bundle.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Genix Highlight Demo</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>PHP</h2>
+            <pre><code class="language-php">
+             &lt;?php
+              namespace 'Core/core';
+              //comentário
+              /*
+              * comentário
+              */
+          
+              $array = ['item', 'item2'];
+          
+              if (file_exists('app/controllers/' . $class . '.php')) {
+                require_once 'app/controllers/' . $class . '.php';
+              } elseif (file_exists('app/models/' . $class . '.php')) {
+                require_once 'app/models/' . $class . '.php';
+              } elseif (file_exists('core/' . $class . '.php')) {
+                require_once 'cores/' . $class . '.php';
+              }
+              
+            </code></pre>
+        </section>
+
+        <pre><code class="language-php">
+            &lt;?php
+            echo "Hello, world!";
+            ?>
+          </code></pre>
+
+        <section>
+            <h2>JavaScript Example</h2>
+            <pre><code class="language-javascript">
+const hello = "Genix Highlight!";
+console.log(hello);
+
+function soma(a, b) {
+    return a + b;
+}
+
+console.log(soma(5, 3));
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>HTML Example</h2>
+            <pre><code id="teste" class="language-html">
+                &lt;!DOCTYPE html&gt;
+                &lt;html lang=&quot;pt&quot;&gt;
+                &lt;head&gt;
+                    &lt;meta charset=&quot;UTF-8&quot;&gt;
+                    &lt;title&gt;HTML Example&lt;/title&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h1&gt;Hello, Genix Highlight!&lt;/h1&gt;
+                    &lt;input type=&quot;text&quot; /&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>CSS Example</h2>
+            <pre><code class="language-css">
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #c678dd;
+    text-align: center;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Python Example</h2>
+            <pre><code class="language-python">
+def hello():
+    message = "Genix Highlight!"
+    print(message)
+
+hello()
+
+def soma(a, b):
+    return a + b
+
+print(soma(5, 3))
+            </code></pre>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Genix Highlight | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+
+            // Tema personalizado
+
+            Genix.setTheme({
+                keyword: 'token-keyword',
+                string: 'string-class',
+                number: 'number-class',
+                comment: 'comment-class',
+                variable: 'variable-class',
+                function: 'function-class',
+                operator: 'operator-class',
+                punctuation: 'punctuation-class',
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>
