@@ -27,10 +27,64 @@ class GenixHighlight {
       return code;
     }
 
-    // Realça o código utilizando o tokenizer
-    const highlighted = this.tokenize(code, this.languages[language]);
-    return highlighted;
+    const lines = code.split('\n'); // Divide o código em linhas
+
+    const highlightedLines = lines.map((line, index) => {
+      const lineNumber = index + 1;
+
+      // Verifica se a linha contém identificadores genéricos escapados
+      const isErrorLine = /(\/\/ ERROR|# ERROR|<!-- ERROR -->)/.test(line.trim());
+
+      if (isErrorLine) {
+        console.log('ero:-', line)
+      }
+      // Remove o identificador da linha antes de tokenizar
+      const sanitizedLine = line.replace(/\/\/ ERROR|# ERROR|<!-- ERROR -->/, '').trim();
+
+      // Tokeniza a linha usando a gramática da linguagem
+      const tokens = this.tokenize(sanitizedLine, this.languages[language]);
+
+      // Adiciona a classe e atributo de erro, se necessário
+      const lineClass = isErrorLine ? 'code-line error-line line-error-indicator' : 'code-line';
+      const dataError = isErrorLine ? 'data-error="true"' : '';
+      const contentClass = isErrorLine ? 'content-error-indicator' : '';
+
+      return `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
+        <span class="line-number">${lineNumber}:</span>
+        <span class="line-content ${contentClass}"> ${tokens}</span>
+      </div>`;
+    });
+
+    return `<div class="code-block">${highlightedLines.join('')}</div>`;
   }
+
+
+
+
+
+
+  highlight2(code, language) {
+    if (!this.languages[language]) {
+      console.warn(`Language '${language}' not registered.`);
+      return code;
+    }
+
+    // Divida o código em linhas
+    const lines = code.split('\n');
+
+    // Realça cada linha separadamente
+    const highlightedLines = lines.map((line, index) => {
+      // Tokeniza a linha usando a gramática da linguagem
+      const tokens = this.tokenize(line, this.languages[language]);
+
+      // Retorna a linha encapsulada em uma div
+      return `<div class="code-line" data-line="${index + 1}"><span class='line-number'>${index + 1}:</span> ${tokens}</div>`;
+    });
+
+    // Junta todas as linhas em uma estrutura final
+    return `<div class="code-block">${highlightedLines.join('')}</div>`;
+  }
+
 
 
 
@@ -43,48 +97,62 @@ class GenixHighlight {
   }
 
   // Tokeniza o código fonte com base na gramática fornecida
-  tokenize(code, grammar) {
+  tokenize(line, grammar) {
     const combinedRegex = this.generateCombinedRegex(grammar);
     let tokens = [];
     let match;
     let lastIndex = 0;
-    let iterationLimit = 1000;
-    let currentLine = 1;
-    let lineTokens = [];
 
-    while ((match = combinedRegex.exec(code)) !== null && iterationLimit-- > 0) {
+    while ((match = combinedRegex.exec(line)) !== null) {
       if (match.index > lastIndex) {
-        // Se o código anterior não foi matchado, adicionar como "plain"
-        tokens.push({ type: 'plain', content: code.slice(lastIndex, match.index), line: currentLine });
-        lineTokens.push(code.slice(lastIndex, match.index));
+        tokens.push({
+          type: 'plain',
+          content: line.slice(lastIndex, match.index)
+        });
       }
 
       for (const type in match.groups) {
         if (match.groups[type]) {
-          // Identificar erro (por exemplo, se um token inválido ou inesperado for encontrado)
-          let tokenType = type;
-          if (this.isErrorToken(match.groups[type])) {
-            tokenType = 'error'; // Altera o tipo para 'error' caso haja erro
-          }
-          tokens.push({ type: tokenType, content: match.groups[type], line: currentLine });
-          lineTokens.push(match.groups[type]);
+          tokens.push({
+            type,
+            content: match.groups[type]
+          });
           break;
         }
       }
 
       lastIndex = combinedRegex.lastIndex;
-      // Se encontramos um salto de linha, incrementa o contador de linhas
-      if (code[match.index] === '\n') {
-        currentLine++;
-      }
     }
 
-    if (lastIndex < code.length) {
-      tokens.push({ type: 'plain', content: code.slice(lastIndex), line: currentLine });
+    // Adiciona o restante da linha
+    if (lastIndex < line.length) {
+      tokens.push({
+        type: 'plain',
+        content: line.slice(lastIndex)
+      });
     }
 
-    return this.stringify(tokens);
+    return tokens.map(t => this.renderToken(t)).join('');
   }
+
+
+
+  renderToken(token) {
+    const className = `token-${token.type}`;
+    const escapedContent = this.escapeHTML(token.content);
+
+    // Adiciona uma classe ou ícone especial para 'line_error'
+    let lastClass = className;
+    let lastContent = escapedContent;
+    if (token.type === 'line_error') {
+      lastContent = lastContent + ' ⚠️';
+      lastClass = lastClass + ' line-error-indicator';
+    }
+
+    return `<span class="${lastClass}">${lastContent}</span>`;
+  }
+
+
 
   isErrorToken(token) {
     // Aqui você pode verificar condições que indicam erro, como sintaxe incorreta, caracteres inválidos, etc.
@@ -159,25 +227,27 @@ class GenixHighlight {
   // Converte tokens em HTML, aplicando as classes de estilo
   // Converte tokens em HTML, aplicando as classes de estilo
   // Converte tokens em HTML, aplicando as classes de estilo
-// Converte tokens em HTML, aplicando as classes de estilo
-stringify(tokens) {
-  return tokens
+  // Converte tokens em HTML, aplicando as classes de estilo
+  stringify(tokens) {
+    return tokens
       .map(token => {
-          // Verifica se o token já possui uma classe definida
-          let className = this.theme?.[token.type] || `token-${token.type}`;
+        // Verifica se o token já possui uma classe definida
+        let className = this.theme?.[token.type] || `token-${token.type}`;
 
-          // Caso o token seja de erro, adiciona a classe 'error' ao className
-          const errorClass = token.type === 'error' ? ' error' : '';
+        // Caso o token seja de erro, adiciona a classe 'error' ao className
+        const errorClass = token.type === 'line_error' ? ' <span class="line-error-indicator">⚠️</span>`' : '';
 
-          const finalClass = `${className}${errorClass}`;
 
-          // Preservando a indentação do código
-          const escapedContent = this.escapeHTML(token.content).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;');
 
-          return `<span class="${finalClass}">${escapedContent}</span>`;
+        const finalClass = `${className}${errorClass}`;
+
+        // Preservando a indentação do código
+        const escapedContent = this.escapeHTML(token.content).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;');
+
+        return `<span class="${finalClass}">${escapedContent}</span>`;
       })
       .join('');
-}
+  }
 
 
 
@@ -224,7 +294,7 @@ stringify(tokens) {
     document.querySelectorAll(selector).forEach(block => {
       const languageClass = Array.from(block.classList)
         .find(cls => cls.startsWith("language-"))?.split("-")[1];
-
+      console.log(block);
       if (languageClass && block.textContent.trim()) {
         let rawCode = block.textContent.trim(); // Pega o código escapado
         block.innerHTML = this.highlight(rawCode, languageClass); // Realça o código
@@ -245,7 +315,10 @@ Genix.registerLanguage('php', {
   comment: /\/\/[^\n]*|\/\*[\s\S]*?\*\//g,
   operator: /[+\-*/=<>!%&|^~?]/g,
   punctuation: /[{}[\]()\.;,]/g,
-  variable: /\$\w+/g
+  variable: /\$\w+/g,
+  error: /Parse error|Fatal error|Syntax error|unexpected token/i, // Captura erros comuns de PHP
+  line_error: /<line_error\/>/g, // Captura a tag <line_error/>
+
 });
 
 console.log(Genix.languages.php); // Check registered tokens

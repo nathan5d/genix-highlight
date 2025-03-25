@@ -79,6 +79,7 @@ pre[data-line] {
     position: relative;
     padding: 1em 0 1em 3em;
 }
+
 pre {
     margin-top: 20px;
 }
@@ -209,9 +210,55 @@ span.error-line-indicator {
     font-weight: bold;
 }
 
-.line-error-indicator::before {
-    content: "⚠️"; /* Ou qualquer outro ícone */
-    color: red;
-    margin-right: 5px;
-  }
-  
+
+.content-error-indicator {
+    text-decoration-style: wavy;
+    text-decoration-color: #00BCD4;
+    text-decoration-line: underline;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: from-font;
+}
+
+
+
+
+.code-block {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    padding: 10px;
+    /* Espaçamento interno */
+    overflow-x: auto;
+    /* Suporte para rolagem horizontal */
+}
+
+.code-line {
+    display: table;
+    /* Usa layout de tabela para melhor suporte de alinhamento */
+    width: 100%;
+    /* Garante que a linha ocupe toda a largura */
+    white-space: pre;
+    /* Preserva espaços e indentação */
+}
+
+.line-number {
+    display: table-cell;
+    /* Célula de tabela */
+    color: #545454;
+    /* Cor da numeração */
+    width: 50px;
+    /* Largura fixa para números */
+    text-align: right;
+    /* Alinha os números à direita */
+    padding-right: 10px;
+    /* Espaçamento entre número e código */
+    vertical-align: top;
+    /* Alinha o número verticalmente no topo */
+    user-select: none;
+    /* Impede seleção dos números */
+}
+
+.line-content {
+    display: table-cell;
+    /* Célula de tabela ao lado da numeração */
+    white-space: pre-wrap;
+    /* Quebra linhas e mantém espaços */
+}
