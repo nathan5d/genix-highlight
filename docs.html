@@ -139,7 +139,8 @@
             text-align: center;
         }
 
-        .hero h1 {
+        .hero h1,
+        h1 {
             max-width: 580px;
         }
 
@@ -253,8 +254,8 @@
         <div class="container">
             <div class="navigation">
                 <nav>
-                    <a href="./" class="selected">Home</a>
-                    <a href="./docs.html">Documentação</a>
+                    <a href="./">Home</a>
+                    <a href="./docs.html" class="selected">Documentação</a>
                     <a href="https://github.com/nathan5d/genix-highlight">No GitHub</a>
                     <a class="github-button" href="https://github.com/nathan5d/genix-highlight" data-style="mega"
                         data-count-href="/nathan5d/genix-highlight/stargazers"
@@ -264,10 +265,11 @@
                 </nav>
             </div>
 
-            <h1>Genix - Biblioteca de Realce de Código</h1>
+            <h1>Documentação <br> Genix - Biblioteca de Realce de Código</h1>
             <h3>Realce de código para várias linguagens com suporte a temas e personalização</h3>
 
-            <a href="https://github.com/nathan5d/genix-highlight/archive/master.zip" class="button-large">Baixar Agora</a>
+            <a href="https://github.com/nathan5d/genix-highlight/archive/master.zip" class="button-large">Baixar
+                Agora</a>
 
             <a href="#examples" class="arrow-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
@@ -278,57 +280,80 @@
                 </svg></a>
         </div>
     </div>
+    <div class="container">
 
-    <section class="examples">
-        <div class="container">
-            <h3 id="examples">Exemplos em Ação</h3>
+        <h2>🚀 Instalação</h2>
+        <p>Você pode instalar via npm ou incluir diretamente no seu HTML.</p>
 
-            <div class="inputs">
-                <div class="box">
-                    <label for="bash-example">Exemplo de Bash</label>
-                    <pre><code class="language-bash" id="bash-example">
-# Exemplo de script Bash
-echo "Olá, Mundo!"
-ls -l /home/user
-                    </code></pre>
-                </div>
+        <div class="box">
+            <label for="php-example">Instalação via NPM</label>
 
-                <div class="box">
-                    <label for="php-example">Exemplo de PHP</label>
-                    <pre><code class="language-php" id="php-example">
-&lt;?php
-if (file_exists('app/controllers/' . $class . '.php')) {
-    require_once 'app/controllers/' . $class . '.php';
-} elseif (file_exists('core/' . $class . '.php')) {
-  
-    require_once 'core/' . $class . '.php'; 
-}
-?&gt;
-                    </code></pre>
-                </div>
-
-                <div class="box">
-                    <label for="json-example">Exemplo de JSON</label>
-                    <pre><code class="language-json" id="json-example">
-{
-  "name": "Genix",
-  "version": "1.0.0",
-  "description": "Realce de código"
-}
-                    </code></pre>
-                </div>
-
-                <div class="box">
-                    <label for="javascript-example">Exemplo de JavaScript</label>
-                    <pre><code class="language-javascript" id="javascript-example">
-const genix = new Genix();
-
-genix.highlightAll();
-                    </code></pre>
-                </div>
-            </div>
+            <pre><code class="language-bash">npm install genix-highlight</code></pre>
         </div>
-    </section>
+
+
+        <div class="box">
+            <label for="php-example">Uso via CDN</label>
+
+            <h3></h3>
+            <pre><code class="language-html">
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/seu-usuario/genixhighlight/dist/genix.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/seu-usuario/genixhighlight/dist/genix.js"&gt;&lt;/script&gt;
+        </code></pre>
+        </div>
+
+        <h2>📝 Uso Básico</h2>
+        <div class="box">
+            <label for="php-example">Para usar o realce de código, basta envolver seu código dentro de um elemento
+                <code>&lt;pre&gt;&lt;code&gt;</code></label>
+            <pre><code class="language-html">
+&lt;pre&gt;
+    &lt;code class="language-js"&gt;
+        const msg = "Hello, world!";
+        console.log(msg);
+    &lt;/code&gt;
+&lt;/pre&gt;
+        </code></pre>
+        </div>
+
+        <h2>⚙️ API e Métodos</h2>
+
+        <div class="box">
+            <label for="php-example">📍 Registrando uma Nova Linguagem</label>
+
+            <h3></h3>
+            <pre><code class="language-javascript">
+GenixHighlight.registerLanguage("customLang", {
+    keywords: ["function", "return", "const", "let", "var"],
+    operators: ["=", "+", "-", "*", "/"],
+    strings: { pattern: /"([^"]*)"/g, class: "string" }
+});
+        </code></pre>
+        </div>
+
+        <div class="box">
+            <label for="">🔍 Aplicando o Realce</label>
+            <pre><code class="language-javascript">
+GenixHighlight.highlight(document.querySelector("pre code"));
+        </code></pre>
+        </div>
+
+
+        <div class="box">
+            <label for="">🎨 Personalizando Temas</label>
+            <p>É possível alterar o tema do realce via CSS.</p>
+            <pre><code class="language-css">
+.hl-keyword { color: #FF4081; }
+.hl-string { color: #4CAF50; }
+.hl-comment { color: #9E9E9E; font-style: italic; }
+        </code></pre>
+        </div>
+
+
+        <h2>🔗 Contribuição</h2>
+        <p>Se quiser contribuir, acesse o repositório no GitHub:</p>
+        <p><a href="https://github.com/nathan5d/genix-highlight" target="_blank">GitHub - GenixHighlight</a></p>
+    </div>
 
     <footer>
         <div class="container">

@@ -1,4 +1,4 @@
-/* Cores do PrismJS - Tema 'prism-tomorrow' */
+/* Cores para todos os tokens */
 .token-block-comment,
 .token-cdata,
 .token-comment,
@@ -13,8 +13,7 @@
 
 .token-attr-name,
 .token-deleted,
-.token-namespace,
-.token-tag {
+.token-namespace {
     color: #e2777a;
 }
 
@@ -39,7 +38,8 @@
 .token-builtin,
 .token-important,
 .token-keyword,
-.token-selector {
+.token-selector,
+.token-tag {
     color: #cc99cd;
 }
 
@@ -53,7 +53,8 @@
 .token-entity,
 .token-operator,
 .token-url,
-.token-variable {
+.token-variable,
+.token-attribute {
     color: #67cdcc;
 }
 
@@ -73,6 +74,47 @@
 .token-inserted {
     color: green;
 }
+
+/* Tokens específicos para linguagens */
+.token-bash-command {
+    color: #f8c555; /* Comandos do Bash */
+}
+
+.token-bash-variable {
+    color: #67cdcc; /* Variáveis no Bash */
+}
+
+.token-bash-string {
+    color: #7ec699; /* Strings no Bash */
+}
+
+.token-bash-comment {
+    color: #999; /* Comentários no Bash */
+}
+
+/* Estilos adicionais para linguagens específicas */
+
+.token-css-selector {
+    color: #8e44ad; /* Seletores no CSS */
+}
+
+.token-css-property {
+    color: #2980b9; /* Propriedades no CSS */
+}
+
+.token-css-value {
+    color: #27ae60; /* Valores no CSS */
+}
+
+.token-scss-mixin {
+    color: #e67e22; /* Mixins no SCSS */
+}
+
+.token-scss-variable {
+    color: #f39c12; /* Variáveis no SCSS */
+}
+
+/* Estilos para tokens comuns a todas as linguagens */
 
 /* Line Highlighting (realce de linha) */
 pre[data-line] {
@@ -176,7 +218,6 @@ pre[class*=language-].line-numbers {
 
 span.inline-color-wrapper {
     background: url(data:image/svg+xml;base64,...);
-    /* Use seu ícone ou cor aqui */
     background-position: center;
     background-size: 110%;
     display: inline-block;
@@ -198,9 +239,7 @@ span.inline-color {
 /* Estilos gerais para tokens de erro */
 span.error {
     background-color: #f8d7da;
-    /* Cor de fundo para erro */
     color: #721c24;
-    /* Cor do texto para erro */
     font-weight: bold;
 }
 
@@ -210,55 +249,49 @@ span.error-line-indicator {
     font-weight: bold;
 }
 
-
 .content-error-indicator {
     text-decoration-style: wavy;
     text-decoration-color: #00BCD4;
     text-decoration-line: underline;
     text-decoration-skip-ink: none;
     text-decoration-thickness: from-font;
+    font-weight: bold;
 }
 
-
-
-
+/* Estilos para blocos de código */
 .code-block {
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     padding: 10px;
-    /* Espaçamento interno */
     overflow-x: auto;
-    /* Suporte para rolagem horizontal */
 }
 
 .code-line {
     display: table;
-    /* Usa layout de tabela para melhor suporte de alinhamento */
     width: 100%;
-    /* Garante que a linha ocupe toda a largura */
     white-space: pre;
-    /* Preserva espaços e indentação */
 }
 
 .line-number {
     display: table-cell;
-    /* Célula de tabela */
     color: #545454;
-    /* Cor da numeração */
     width: 50px;
-    /* Largura fixa para números */
     text-align: right;
-    /* Alinha os números à direita */
     padding-right: 10px;
-    /* Espaçamento entre número e código */
     vertical-align: top;
-    /* Alinha o número verticalmente no topo */
     user-select: none;
-    /* Impede seleção dos números */
 }
 
 .line-content {
     display: table-cell;
-    /* Célula de tabela ao lado da numeração */
     white-space: pre-wrap;
-    /* Quebra linhas e mantém espaços */
+}
+
+pre {
+    background-color: #2d2d2d;
+    padding: 1rem;
+    border-radius: 5px;
+    overflow-x: auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    margin-top: 20px;
 }
