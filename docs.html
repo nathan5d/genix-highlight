@@ -46,11 +46,6 @@
             line-height: 1.5;
         }
 
-        h1,
-        h2,
-        h3 {
-            font-family: 'Lora', serif;
-        }
 
         h1 {
             font-size: 46px;
@@ -283,32 +278,32 @@
     <div class="container">
 
         <h2>🚀 Instalação</h2>
-        <p>Você pode instalar via npm ou incluir diretamente no seu HTML.</p>
-
-        <div class="box">
-            <label for="php-example">Instalação via NPM</label>
+        <p>Você pode incluir diretamente no seu HTML.</p>
+        <!--
+        <div class="box highlight">
+            <label>Instalação via NPM</label>
 
             <pre><code class="language-bash">npm install genix-highlight</code></pre>
         </div>
+    -->
 
-
-        <div class="box">
-            <label for="php-example">Uso via CDN</label>
+        <div class="box highlight">
+            <label>Uso via CDN</label>
 
             <h3></h3>
-            <pre><code class="language-html">
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/seu-usuario/genixhighlight/dist/genix.css"&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/seu-usuario/genixhighlight/dist/genix.js"&gt;&lt;/script&gt;
+            <pre style="font-size: 0.9rem;"><code class="language-html">
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/css/styles.min.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/bundle.min.js"&gt;&lt;/script&gt;
         </code></pre>
         </div>
 
         <h2>📝 Uso Básico</h2>
-        <div class="box">
-            <label for="php-example">Para usar o realce de código, basta envolver seu código dentro de um elemento
+        <div class="box highlight">
+            <label>Para usar o realce de código, basta envolver seu código dentro de um elemento
                 <code>&lt;pre&gt;&lt;code&gt;</code></label>
             <pre><code class="language-html">
 &lt;pre&gt;
-    &lt;code class="language-js"&gt;
+    &lt;code class="language-javascript"&gt;
         const msg = "Hello, world!";
         console.log(msg);
     &lt;/code&gt;
@@ -318,34 +313,45 @@
 
         <h2>⚙️ API e Métodos</h2>
 
-        <div class="box">
-            <label for="php-example">📍 Registrando uma Nova Linguagem</label>
+        <div class="box highlight">
+            <label>📍 Registrando Novos Tokens</label>
 
             <h3></h3>
             <pre><code class="language-javascript">
-GenixHighlight.registerLanguage("customLang", {
-    keywords: ["function", "return", "const", "let", "var"],
-    operators: ["=", "+", "-", "*", "/"],
-    strings: { pattern: /"([^"]*)"/g, class: "string" }
+Genix.addCustomTokens('html', {
+    keyword: ['doctype', 'html', 'head', 'body', 'meta'],
+    operator: ['='],
+}, false); // true - substitui os já existentes
+        </code></pre>
+        </div>
+
+        <div class="box highlight">
+            <label for="">🔍 Aplicando o Realce</label>
+            <pre><code class="language-javascript">
+Genix.highlightAll({
+    showLineNumbers: true
 });
         </code></pre>
         </div>
 
-        <div class="box">
-            <label for="">🔍 Aplicando o Realce</label>
+        <div class="box number-false">
+            <label>🎨 Ocultando números de linha</label>
             <pre><code class="language-javascript">
-GenixHighlight.highlight(document.querySelector("pre code"));
+// TODO: Refactor this function
+Genix.highlightAll({
+    showLineNumbers: false
+});
         </code></pre>
         </div>
 
 
-        <div class="box">
+        <div class="box highlight">
             <label for="">🎨 Personalizando Temas</label>
             <p>É possível alterar o tema do realce via CSS.</p>
             <pre><code class="language-css">
-.hl-keyword { color: #FF4081; }
-.hl-string { color: #4CAF50; }
-.hl-comment { color: #9E9E9E; font-style: italic; }
+.hl-token-keyword { color: #FF4081; } #FIXME
+.hl-token-string { color: #4CAF50; }
+.hl-token-comment { color: #9E9E9E; font-style: italic; }
         </code></pre>
         </div>
 
@@ -364,9 +370,21 @@ GenixHighlight.highlight(document.querySelector("pre code"));
 
     <script src="./dist/js/bundle.min.js"></script>
     <script>
+        Genix.addCustomTokens('javascript', {
+            keyword: ['keyword', 'operator'], // Novos keywords
+            variable: /\$\w+/g, // Variáveis do PHP
+            error: /Parse error|Fatal error|unexpected token/i // Erros comuns em PHP
+        }, true); // O `true` substitui os tokens existentes
+
+
         // Realce do código
         Genix.highlightAll({
+            selector: '.highlight',
             showLineNumbers: true
+        });
+        Genix.highlight('.number-false code', {
+            showLineNumbers: false,
+            errorIdentifiers: ['ERROR_LINE', '// TODO:', '#FIXME']
         });
 
     </script>

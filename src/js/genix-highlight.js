@@ -30,7 +30,7 @@ class GenixHighlight {
     if (registeredLanguages.length === 0) {
       console.warn("Plugin não registrou nenhuma linguagem.");
     } else {
-      console.log(`Linguagens registradas: ${registeredLanguages.join(', ')}`);
+      //console.log(`Linguagens registradas: ${registeredLanguages.join(', ')}`);
     }
 
     // Adiciona o plugin à lista para evitar duplicação
@@ -52,47 +52,86 @@ class GenixHighlight {
   // Método highlightAll com opções personalizáveis
   highlightAll(options = { showLineNumbers: true, selector: "pre" }) {
     const selector = `${options.selector || 'pre'} code`;
-
     document.querySelectorAll(selector).forEach(block => {
-      const languageClass = Array.from(block.classList)
+      console.log(`Processing element: ${block.tagName} with class: ${block.className}`);
+      this.highlight(block, options);
+    });
+  }
+
+  highlight(className = null, options = { showLineNumbers: true }) {
+    if (!className) {
+      this.highlightAll(options); // Usa highlightAll como fallback
+      return;
+    }
+
+    const elements = typeof className === "string"
+      ? document.querySelectorAll(className)
+      : (className instanceof Element ? [className] : []); // Só aceita elementos válidos
+
+    if (!elements.length) {
+      console.warn(`No elements found for selector: ${className}`);
+      return;
+    }
+
+    elements.forEach(element => {
+      const languageClass = Array.from(element.classList)
         .find(cls => cls.startsWith("language-"))?.split("-")[1];
 
-      if (languageClass && block.textContent.trim()) {
-        let rawCode = block.textContent.trim(); // Pega o código escapado
+      if (!languageClass) {
+        console.warn(`Language not detected for element with selector: ${className}`);
+        return;
+      }
 
+      if (element.textContent.trim()) {
+        const rawCode = element.textContent.trim();
         if (options.showLineNumbers !== undefined) {
-          this.setShowLineNumbers(options.showLineNumbers); // Atualiza conforme o valor explícito
+          this.setShowLineNumbers(options.showLineNumbers);
         }
 
-        block.innerHTML = this.highlight(rawCode, languageClass); // Realça o código
+        element.innerHTML = this.highlightCode(rawCode, languageClass, options);
       }
     });
   }
 
-
-
-  // Realça o código fonte de acordo com a linguagem especificada
-  highlight(code, language) {
+  highlightCode(code, language, options = {}) {
     if (!this.languages[language]) {
-      console.warn(`Language '${language}' not registered.`);
-      return code;
+      throw new Error(`Language '${language}' not registered. Please register the language before highlighting.`);
+    }
+  
+    // Usa createPattern para processar os identificadores
+    const errorPattern = this.createPatternError(options.errorIdentifiers || [
+      'ERROR_LINE',
+      '// TODO',
+      '// FIXME'
+    ]);
+  
+    console.log("Compiled Error Pattern:", errorPattern);
+  
+    if (!errorPattern || !(errorPattern instanceof RegExp)) {
+      console.warn("Failed to create a valid error pattern from identifiers.");
+      return code; // Retorna o código original caso a expressão falhe
     }
   
     const lines = code.split('\n'); // Divide o código em linhas
+  
     const highlightedLines = lines.map((line, index) => {
       const lineNumber = index + 1;
-      const isErrorLine = /(\/\/ ERROR_LINE|# ERROR_LINE|<!-- ERROR_LINE -->|```ERROR_LINE)/.test(line.trim());
   
-      // Remove o identificador da linha antes de tokenizar
-      const sanitizedLine = line.replace(/\/\/ ERROR_LINE|# ERROR_LINE|<!-- ERROR_LINE -->|```ERROR_LINE/, '');
+      // Testa se a linha contém identificadores de erro
+      const isErrorLine = errorPattern.test(line);
+  
+      // Remove o identificador da linha antes da renderização
+      const sanitizedLine = line.replace(errorPattern, '');
   
       // Tokeniza a linha usando a gramática da linguagem
       const tokens = this.tokenize(sanitizedLine, this.languages[language]);
   
+      // Define as classes de erro para a linha
       const lineClass = isErrorLine ? 'code-line error-line line-error-indicator' : 'code-line';
       const dataError = isErrorLine ? 'data-error="true"' : '';
       const contentClass = isErrorLine ? 'content-error-indicator' : '';
   
+      // Monta a linha renderizada
       let renderLine = `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
         <span class="line-content ${contentClass}">${tokens}</span>
       </div>`;
@@ -110,6 +149,39 @@ class GenixHighlight {
     return `<div class="code-block">${highlightedLines.join('')}</div>`;
   }
   
+
+  createPatternError(token) {
+    if (Array.isArray(token)) {
+      // Cria um padrão consolidado com OR (|) para cada item do array
+      const escapedTokens = token.map(t => {
+        if (typeof t === 'string') {
+          // Escapa caracteres especiais em strings
+          return t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+        }
+        return t;
+      });
+  
+      return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
+    }
+  
+    if (typeof token === 'string') {
+      if (this.isInvalidPattern(token)) {
+        console.warn(`Invalid pattern found: ${token}`);
+        return null;
+      }
+      return new RegExp(`\\b${token}\\b`, 'g');
+    }
+  
+    if (token instanceof RegExp) {
+      return token; // Retorna diretamente se já for uma regex
+    }
+  
+    console.warn("Invalid token format provided.");
+    return null;
+  }
+  
+  
+
 
   // Gera uma expressão regular combinada a partir de uma gramática
   generateCombinedRegex(grammar) {
@@ -158,7 +230,7 @@ class GenixHighlight {
   }
 
   renderToken(token) {
-    const className = `token-${token.type}`;
+    const className = `hl-token-${token.type}`;
     const escapedContent = this.escapeHTML(token.content);
 
     let lastClass = className;
@@ -218,6 +290,7 @@ class GenixHighlight {
     });
   }
 
+  
   // Cria uma expressão regular a partir de um padrão de token
   createPattern(token) {
     if (Array.isArray(token)) {
