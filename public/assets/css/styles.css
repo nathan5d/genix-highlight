@@ -82,6 +82,7 @@ a:hover {
 }
 
 /* Navigation Styles */
+/* Navigation Styles */
 .navigation {
     margin: 60px 0;
 }
@@ -90,6 +91,7 @@ a:hover {
     display: flex;
     justify-content: center;
     gap: 40px;
+    flex-wrap: wrap; /* Adiciona flex-wrap para dispositivos menores */
 }
 
 .navigation nav a {
@@ -99,6 +101,19 @@ a:hover {
 .navigation nav a.selected {
     color: #2E2E2E;
     border-bottom: 2px solid #2E2E2E;
+}
+
+/* Responsividade para dispositivos menores */
+@media (max-width: 768px) {
+    .navigation nav {
+        flex-direction: column; /* Alinha os links verticalmente */
+        gap: 20px; /* Reduz o espaçamento entre os links */
+        align-items: center; /* Centraliza os links */
+    }
+
+    .navigation nav a {
+        font-size: 16px; /* Ajusta o tamanho da fonte */
+    }
 }
 
 .hero {
