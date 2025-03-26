@@ -120,11 +120,6 @@ a:hover {
     }
 }
 
-.hero {
-    margin-top: 60px;
-
-}
-
 .hero .container {
     display: flex;
     flex-direction: column;
