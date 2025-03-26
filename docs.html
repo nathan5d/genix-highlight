@@ -38,26 +38,30 @@
                 </nav>
             </div>
 
-            <h1>Documentação <br> Genix - Biblioteca de Realce de Código</h1>
+            <h1>Genix Highlight</h1>
             <h3>Realce de código para várias linguagens com suporte a temas e personalização</h3>
+
 
             <a href="https://github.com/nathan5d/genix-highlight/archive/master.zip" class="button-large">Baixar
                 Agora</a>
 
-            <a href="#examples" class="arrow-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+
+            <a href="#examples" class="arrow-down" data-target="docs"><svg xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
                     <line x1="128" y1="40" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="16" />
                     <polyline points="56 144 128 216 200 144" fill="none" stroke="currentColor" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="16" />
-                </svg></a>
+                </svg>
+            </a>
         </div>
-    </div>
-    <div class="container">
+        <section id="docs">
+            <div class="container">
 
-        <h2>🚀 Instalação</h2>
-        <p>Você pode incluir diretamente no seu HTML.</p>
-        <!--
+                <h2>🚀 Instalação</h2>
+                <p>Você pode incluir diretamente no seu HTML.</p>
+                <!--
         <div class="box highlight">
             <label>Instalação via NPM</label>
 
@@ -65,21 +69,21 @@
         </div>
     -->
 
-        <div class="box highlight">
-            <label>Uso via CDN</label>
+                <div class="box highlight">
+                    <label>Uso via CDN</label>
 
-            <h3></h3>
-            <pre style="font-size: 0.9rem;"><code class="language-html">
+                    <h3></h3>
+                    <pre style="font-size: 0.9rem;"><code class="language-html">
 &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/css/styles.min.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/bundle.min.js"&gt;&lt;/script&gt;
         </code></pre>
-        </div>
+                </div>
 
-        <h2>📝 Uso Básico</h2>
-        <div class="box highlight">
-            <label>Para usar o realce de código, basta envolver seu código dentro de um elemento
-                <code>&lt;pre&gt;&lt;code&gt;</code></label>
-            <pre><code class="language-html">
+                <h2>📝 Uso Básico</h2>
+                <div class="box highlight">
+                    <label>Para usar o realce de código, basta envolver seu código dentro de um elemento
+                        <code>&lt;pre&gt;&lt;code&gt;</code></label>
+                    <pre><code class="language-html">
 &lt;pre&gt;
     &lt;code class="language-javascript"&gt;
         const msg = "Hello, world!";
@@ -87,117 +91,140 @@
     &lt;/code&gt;
 &lt;/pre&gt;
         </code></pre>
-        </div>
+                </div>
 
-        <h2>⚙️ API e Métodos</h2>
+                <h2>⚙️ API e Métodos</h2>
 
-        <div class="box highlight">
-            <label>📍 Registrando Novos Tokens</label>
+                <div class="box highlight">
+                    <label>📍 Registrando Novos Tokens</label>
 
-            <h3></h3>
-            <pre><code class="language-javascript">
+                    <h3></h3>
+                    <pre><code class="language-javascript">
 Genix.addCustomTokens('html', {
     keyword: ['doctype', 'html', 'head', 'body', 'meta'],
     operator: ['='],
 }, false); // true - substitui os já existentes
         </code></pre>
-        </div>
+                </div>
 
-        <div class="box highlight">
-            <label for="">🔍 Aplicando o Realce</label>
-            <pre><code class="language-javascript">
+                <div class="box highlight">
+                    <label for="">🔍 Aplicando o Realce</label>
+                    <pre><code class="language-javascript">
 Genix.highlightAll({
     showLineNumbers: true
 });
         </code></pre>
-        </div>
+                </div>
 
-        <div class="box number-false">
-            <label>🎨 Ocultando números de linha</label>
-            <pre><code class="language-javascript">
+                <div class="box number-false">
+                    <label>🎨 Ocultando números de linha</label>
+                    <pre><code class="language-javascript">
 // TODO: Refactor this function
 Genix.highlightAll({
     showLineNumbers: false
 });
         </code></pre>
-        </div>
+                </div>
 
 
-        <div class="box ">
-            <label for="">🎨 Personalizando Temas</label>
-            <p>É possível alterar o tema do realce via CSS.</p>
-            <pre class="highlight"><code class="language-css">
+                <div class="box ">
+                    <label for="">🎨 Personalizando Temas</label>
+                    <p>É possível alterar o tema do realce via CSS.</p>
+                    <pre class="highlight"><code class="language-css">
 .hl-token-keyword { color: #FF4081; }
 .hl-token-string { color: #4CAF50; }
 .hl-token-comment { color: #9E9E9E; font-style: italic; }
         </code></pre>
-        </div>
+                </div>
 
-        <div class="box highlight">
-            <label for="">⚠️ Sinalizando Exceptions</label>
-            <p>É possivel marcar uma linha de erro usando o comando <strong><code>ERROR_LINE</code></strong></p>
-            <pre><code class="language-javascript">
+                <div class="box highlight">
+                    <label for="">⚠️ Sinalizando Exceptions</label>
+                    <p>É possivel marcar uma linha de erro usando o comando <strong><code>ERROR_LINE</code></strong></p>
+                    <pre><code class="language-javascript">
 Genix.highlightAll({
     showLineNumbers: trues ERROR_LINE
 });
         </code>
     </pre>
-        </div>
+                </div>
 
-        <div class="box highlight">
-            <label for="">⚠️ Customizando Identificadores de Exceptions</label>
-            <p>Utilize <strong><code>errorIdentifiers</code></strong> para inserir identificadores customizados para
-                linhas de Erros e Exceptions</p>
-            <pre><code class="language-php">
+                <div class="box highlight">
+                    <label for="">⚠️ Customizando Identificadores de Exceptions</label>
+                    <p>Utilize <strong><code>errorIdentifiers</code></strong> para inserir identificadores customizados
+                        para
+                        linhas de Erros e Exceptions</p>
+                    <pre><code class="language-php">
 if (file_exists('app/controllers/' . $class . '.php')) { ERROR_LINE #FIXME
 </code></pre>
-        </div>
-        <div class="box highlight">
-            <label for="">⚠️ Customizando o identificador de Exceptions</label>
-            <pre><code class="language-javascript">
+                </div>
+                <div class="box highlight">
+                    <label for="">⚠️ Customizando o identificador de Exceptions</label>
+                    <pre><code class="language-javascript">
 Genix.highlight('.highlight-error', {
     showLineNumbers: false,
     errorIdentifiers: [ '#FIXME','ERROR_HERE','```ERROR']
 });</code>
     </pre>
 
-        </div>
-        <h2>🔗 Contribuição</h2>
-        <p>Se quiser contribuir, acesse o repositório no GitHub:</p>
-        <p><a href="https://github.com/nathan5d/genix-highlight" target="_blank">GitHub - GenixHighlight</a></p>
-    </div>
+                </div>
+                <h2>🔗 Contribuição</h2>
+                <p>Se quiser contribuir, acesse o repositório no GitHub:</p>
+                <p><a href="https://github.com/nathan5d/genix-highlight" target="_blank">GitHub - GenixHighlight</a></p>
+            </div>
+        </section>
 
-    <footer>
-        <div class="container">
-            <h3>Criado por Nathan Amaral</h3>
+        <footer>
+            <div class="container">
+                <h3>Criado por Nathan Amaral</h3>
 
-        </div>
-    </footer>
+            </div>
+        </footer>
 
-    <script src="./dist/js/bundle.min.js"></script>
-    <script>
-        Genix.addCustomTokens('javascript', {
-            keyword: ['keyword', 'operator', 'Genix'], // Novos keywords
-            function: ['addCustomTokens', 'highlightAll'],
-            boolean: ['true', 'false'],
-            object: ['showLineNumbers', 'errorIdentifiers'],
-            variable: /\$\w+/g, // Variáveis do PHP
-            error: /Parse error|Fatal error|unexpected token/i // Erros comuns em PHP
-        }, false); // O `true` substitui os tokens existentes
+        <script src="./dist/js/bundle.min.js"></script>
+        <script>
+            Genix.addCustomTokens('javascript', {
+                keyword: ['keyword', 'operator', 'Genix'], // Novos keywords
+                function: ['addCustomTokens', 'highlightAll'],
+                boolean: ['true', 'false'],
+                object: ['showLineNumbers', 'errorIdentifiers'],
+                variable: /\$\w+/g, // Variáveis do PHP
+                error: /Parse error|Fatal error|unexpected token/i // Erros comuns em PHP
+            }, false); // O `true` substitui os tokens existentes
 
 
-        // Realce do código
-        Genix.highlightAll({
-            selector: '.highlight',
-            showLineNumbers: true,
-            errorIdentifiers: ['ERROR_LINE']
-        });
-        Genix.highlight('.number-false', {
-            showLineNumbers: false,
-            errorIdentifiers: ['ERROR_LINE', '#FIXME', '```ERROR_LINE']
-        });
+            // Realce do código
+            Genix.highlightAll({
+                selector: '.highlight',
+                showLineNumbers: true,
+                errorIdentifiers: ['ERROR_LINE']
+            });
+            Genix.highlight('.number-false', {
+                showLineNumbers: false,
+                errorIdentifiers: ['ERROR_LINE', '#FIXME', '```ERROR_LINE']
+            });
 
-    </script>
+        </script>
+
+        <script>
+            // Função para rolagem suave
+            document.querySelectorAll('.arrow-down').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault(); // Impede o comportamento padrão do link
+
+                    const targetSelector = this.getAttribute('data-target'); // Obtém o valor de data-target
+                    const target = document.getElementById(targetSelector); // Seleciona o elemento de destino
+
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth', // Rola suavemente
+                            block: 'start' // Alinha a rolagem ao início da seção
+                        });
+                    }
+                });
+            });
+
+        </script>
+
 </body>
 
 </html>

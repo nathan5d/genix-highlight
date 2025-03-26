@@ -16,6 +16,10 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth; /* Suaviza rolagens de âncoras */
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     color: var(--text-color);
@@ -206,11 +210,6 @@ label {
     margin-top: 40px;
 }
 
-.examples .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .examples p {
     font-size: 18px;
@@ -231,5 +230,6 @@ footer .container {
 }
 
 .box {
+    max-width: 100%;
     margin-bottom: 60px;
 }

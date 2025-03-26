@@ -12,10 +12,10 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700&display=swap" rel="stylesheet">
 
-       <!-- External Stylesheets -->
-       <link rel="stylesheet" href="./dist/css/styles.min.css">
-       <link rel="stylesheet" href="public/assets/css/styles.css">
-   
+    <!-- External Stylesheets -->
+    <link rel="stylesheet" href="./dist/css/styles.min.css">
+    <link rel="stylesheet" href="public/assets/css/styles.css">
+
     <!-- Async script for GitHub buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
@@ -38,12 +38,13 @@
                 </nav>
             </div>
 
-            <h1>Genix - Biblioteca de Realce de Código</h1>
+            <h1>Genix Highlight</h1>
             <h3>Realce de código para várias linguagens com suporte a temas e personalização</h3>
 
-            <a href="https://github.com/nathan5d/genix-highlight/archive/master.zip" class="button-large">Baixar Agora</a>
+            <a href="https://github.com/nathan5d/genix-highlight/archive/master.zip" class="button-large">Baixar
+                Agora</a>
 
-            <a href="#examples" class="arrow-down"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+            <a href="#examples" class="arrow-down" data-target="examples"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                     <rect width="256" height="256" fill="none" />
                     <line x1="128" y1="40" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round"
                         stroke-linejoin="round" stroke-width="16" />
@@ -53,9 +54,9 @@
         </div>
     </div>
 
-    <section class="examples">
+    <section id="examples">
         <div class="container">
-            <h3 id="examples">Exemplos em Ação</h3>
+            <h3 >Exemplos em Ação</h3>
 
             <div class="inputs">
                 <div class="box">
@@ -68,7 +69,7 @@ ls -l /home/user
                 </div>
 
                 <div class="box">
-                    <label >Exemplo de PHP</label>
+                    <label>Exemplo de PHP</label>
                     <pre><code class="language-php" id="php-example">
 &lt;?php
 if (file_exists('app/controllers/' . $class . '.php')) {
@@ -117,8 +118,26 @@ genix.highlightAll();
         Genix.highlightAll({
             showLineNumbers: true
         });
+    </script>
+    <script>
+        document.querySelectorAll('.arrow-down').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault(); // Impede o comportamento padrão do link
+
+                const targetSelector = this.getAttribute('data-target'); // Obtém o valor de data-target
+                const target = document.getElementById(targetSelector); // Seleciona o elemento de destino
+
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth', // Rola suavemente
+                        block: 'start' // Alinha a rolagem ao início da seção
+                    });
+                }
+            });
+        });
 
     </script>
+
 </body>
 
 </html>

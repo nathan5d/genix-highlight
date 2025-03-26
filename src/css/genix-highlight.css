@@ -269,7 +269,7 @@ span.error-line-indicator {
 }
 
 .code-line {
-    display: table;
+    display: table-row;
     width: 100%;
     white-space: pre;
 }
@@ -286,7 +286,7 @@ span.error-line-indicator {
 
 .line-content {
     display: table-cell;
-    white-space: pre-wrap;
+    /*white-space: pre-wrap;*/
 }
 
 pre {
