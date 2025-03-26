@@ -53,7 +53,7 @@ class GenixHighlight {
   highlightAll(options = { showLineNumbers: true, selector: "pre" }) {
     const selector = `${options.selector || 'pre'}`;
     document.querySelectorAll(selector).forEach(block => {
-      console.log(`Processing element: ${block.tagName} with class: ${block.className}`);
+     //console.log(`Processing element: ${block.tagName} with class: ${block.className}`);
       this.highlight(block, options); // Reutiliza highlight diretamente
     });
   }
@@ -114,7 +114,7 @@ class GenixHighlight {
       '// FIXME'
     ]);
 
-    console.log("Compiled Error Pattern:", errorPattern);
+   //console.log("Compiled Error Pattern:", errorPattern);
 
     if (!errorPattern || !(errorPattern instanceof RegExp)) {
       console.warn("Failed to create a valid error pattern from identifiers.");
@@ -122,14 +122,14 @@ class GenixHighlight {
     }
 
     const lines = code.split('\n'); // Divide o código em linhas
-    console.log("Original Lines:", lines);
+   //console.log("Original Lines:", lines);
 
     const highlightedLines = lines.map((line, index) => {
       const lineNumber = index + 1;
 
       const isErrorLine = errorPattern.test(line);
       const sanitizedLine = line.replace(errorPattern, ''); // Remove e sanitiza espaços extras
-      console.log(`Sanitized Line [${lineNumber}]:`, sanitizedLine);
+     //console.log(`Sanitized Line [${lineNumber}]:`, sanitizedLine);
 
       /* if (sanitizedLine.length === 0) {
            console.warn(`Empty Line Detected [${lineNumber}]. Skipping.`);
@@ -137,7 +137,7 @@ class GenixHighlight {
        }
 */
       const tokens = this.tokenize(sanitizedLine, this.languages[language]);
-      console.log(`Tokens for Line [${lineNumber}]:`, tokens);
+     //console.log(`Tokens for Line [${lineNumber}]:`, tokens);
 
       const lineClass = isErrorLine ? 'code-line error-line line-error-indicator' : 'code-line';
       const dataError = isErrorLine ? 'data-error="true"' : '';
@@ -203,7 +203,7 @@ class GenixHighlight {
         }
         return t;
       });
-      console.log('array ', token)
+     //console.log('array ', token)
       //return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
       return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
 
@@ -214,7 +214,7 @@ class GenixHighlight {
         console.warn(`Invalid pattern found: ${token}`);
         return null;
       }
-      console.log('string ', token)
+     //console.log('string ', token)
       return new RegExp(`\\b${token}\\b`, 'g');
     }
 
@@ -248,7 +248,7 @@ class GenixHighlight {
   }
 
   transformTypeToClassName(type) {
-    console.log('replace type ', type);
+   //console.log('replace type ', type);
     // Converte letras maiúsculas para kebab-case
     return type.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   }
@@ -277,7 +277,7 @@ class GenixHighlight {
       for (const type in match.groups) {
         if (match.groups[type]) {
           matchedType = type;
-          console.log('Matched Type:', type);
+         //console.log('Matched Type:', type);
           tokens.push({
             type: this.transformTypeToClassName(type), // Transforma diretamente o `type` para kebab-case
             content: match.groups[type]
@@ -319,14 +319,12 @@ class GenixHighlight {
     while ((match = combinedRegex.exec(line)) !== null) {
       if (match.index > lastIndex) {
         const plainContent = line.slice(lastIndex, match.index);
-        console.log("Plain Content:", plainContent);
         tokens.push({
           type: 'string', //lastType, // Usa o último tipo válido
           content: plainContent
         });
       }
 
-      console.log("Matched Groups:", match.groups);
       let matchedType = null;
 
       for (const type in match.groups) {
@@ -351,7 +349,6 @@ class GenixHighlight {
 
     if (lastIndex < line.length) {
       const remainingText = line.slice(lastIndex);
-      console.log("Remaining Text:", remainingText);
       tokens.push({
         type: lastType, // Usa o último tipo válido para o restante
         content: remainingText
@@ -408,7 +405,6 @@ class GenixHighlight {
       console.warn(`Language '${language}' not registered.`);
       return;
     }
-    console.log('repl ', replace);
     Object.keys(customTokens).forEach(type => {
       const tokenPatterns = this.createPattern(customTokens[type]);
 
