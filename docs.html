@@ -71,11 +71,17 @@
 
                 <div class="box highlight">
                     <label>Uso via CDN</label>
-
-                    <h3></h3>
                     <pre style="font-size: 0.9rem;"><code class="language-html">
 &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/css/styles.min.css"&gt;
 &lt;script src="https://cdn.jsdelivr.net/gh/nathan5d/genix-highlight/dist/bundle.min.js"&gt;&lt;/script&gt;
+        </code></pre>
+                </div>  
+                
+                <div class="box highlight">
+                    <label>Uso via Download</label>
+                    <pre style="font-size: 0.9rem;"><code class="language-html">
+&lt;link rel="stylesheet" href="./path/genix-highlight/dist/css/styles.min.css"&gt;
+&lt;script src="./path/genix-highlight/dist/bundle.min.js"&gt;&lt;/script&gt;
         </code></pre>
                 </div>
 
@@ -98,7 +104,6 @@
                 <div class="box highlight">
                     <label>📍 Registrando Novos Tokens</label>
 
-                    <h3></h3>
                     <pre><code class="language-javascript">
 Genix.addCustomTokens('html', {
     keyword: ['doctype', 'html', 'head', 'body', 'meta'],
@@ -182,7 +187,7 @@ Genix.highlight('.highlight-error', {
 
         <script src="./dist/js/bundle.min.js"></script>
         <script>
-            Genix.addCustomTokens('javascript', {
+            /*Genix.addCustomTokens('javascript', {
                 keyword: ['keyword', 'operator', 'Genix'], // Novos keywords
                 function: ['addCustomTokens', 'highlightAll'],
                 boolean: ['true', 'false'],
@@ -190,7 +195,7 @@ Genix.highlight('.highlight-error', {
                 variable: /\$\w+/g, // Variáveis do PHP
                 error: /Parse error|Fatal error|unexpected token/i // Erros comuns em PHP
             }, false); // O `true` substitui os tokens existentes
-
+*/
 
             // Realce do código
             Genix.highlightAll({

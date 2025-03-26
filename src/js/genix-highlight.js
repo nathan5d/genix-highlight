@@ -103,14 +103,11 @@ class GenixHighlight {
   }
 
 
-
   highlightCode(code, language, options = {}) {
     if (!this.languages[language]) {
       throw new Error(`Language '${language}' not registered. Please register the language before highlighting.`);
     }
 
-
-    // Usa createPattern para processar os identificadores
     const errorPattern = this.createPatternError(options.errorIdentifiers || [
       'ERROR_LINE',
       '// TODO',
@@ -125,41 +122,44 @@ class GenixHighlight {
     }
 
     const lines = code.split('\n'); // Divide o código em linhas
+    console.log("Original Lines:", lines);
 
     const highlightedLines = lines.map((line, index) => {
       const lineNumber = index + 1;
 
-      // Testa se a linha contém identificadores de erro
       const isErrorLine = errorPattern.test(line);
+      const sanitizedLine = line.replace(errorPattern, ''); // Remove e sanitiza espaços extras
+      console.log(`Sanitized Line [${lineNumber}]:`, sanitizedLine);
 
-      // Remove o identificador da linha antes da renderização
-      const sanitizedLine = line.replace(errorPattern, '');
-
-      // Tokeniza a linha usando a gramática da linguagem
+      /* if (sanitizedLine.length === 0) {
+           console.warn(`Empty Line Detected [${lineNumber}]. Skipping.`);
+           return ''; // Ignora linhas vazias ou sem conteúdo relevante
+       }
+*/
       const tokens = this.tokenize(sanitizedLine, this.languages[language]);
+      console.log(`Tokens for Line [${lineNumber}]:`, tokens);
 
-      // Define as classes de erro para a linha
       const lineClass = isErrorLine ? 'code-line error-line line-error-indicator' : 'code-line';
       const dataError = isErrorLine ? 'data-error="true"' : '';
       const contentClass = isErrorLine ? 'content-error-indicator' : '';
 
-      // Monta a linha renderizada
       let renderLine = `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
-        <span class="line-content ${contentClass}">${tokens}</span>
-      </div>`;
+            <span class="line-content ${contentClass}">${tokens}</span>
+        </div>`;
 
       if (this.showLineNumbers) {
         renderLine = `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
-          <span class="line-number">${lineNumber}:</span>
-          <span class="line-content ${contentClass}">${tokens}</span>
-        </div>`;
+                <span class="line-number">${lineNumber}:</span>
+                <span class="line-content ${contentClass}">${tokens}</span>
+            </div>`;
       }
 
       return renderLine;
     });
 
-    return `<div class="code-block">${highlightedLines.join('')}</div>`;
+    return `<div class="code-block">${highlightedLines.filter(Boolean).join('')}</div>`;
   }
+
 
 
   createPatternError(token) {
@@ -242,49 +242,125 @@ class GenixHighlight {
   generateCombinedRegex(grammar) {
     const allPatterns = Object.entries(grammar).flatMap(([type, patterns]) =>
       (Array.isArray(patterns) ? patterns : [patterns]).map(p => `(?<${type}>${p.source})`)
+
     );
     return new RegExp(allPatterns.join('|'), 'g');
   }
+
+  transformTypeToClassName(type) {
+    console.log('replace type ', type);
+    // Converte letras maiúsculas para kebab-case
+    return type.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+  }
+
 
   // Tokeniza o código fonte com base na gramática fornecida
   tokenize(line, grammar) {
     const combinedRegex = this.generateCombinedRegex(grammar);
     let tokens = [];
-    let match;
+    const matches = [...line.matchAll(combinedRegex)];
     let lastIndex = 0;
 
-    while ((match = combinedRegex.exec(line)) !== null) {
+    matches.forEach(match => {
       if (match.index > lastIndex) {
-        tokens.push({
-          type: 'plain',
-          content: line.slice(lastIndex, match.index)
-        });
+        const plainContent = line.slice(lastIndex, match.index);
+        if (plainContent) {
+          tokens.push({
+            type: 'string',
+            content: plainContent
+          });
+        }
       }
 
+      let matchedType = null;
 
       for (const type in match.groups) {
-        if (match.groups[type]) { // Confirma que o grupo não é undefined
+        if (match.groups[type]) {
+          matchedType = type;
+          console.log('Matched Type:', type);
           tokens.push({
-            type,
+            type: this.transformTypeToClassName(type), // Transforma diretamente o `type` para kebab-case
             content: match.groups[type]
           });
           break;
         }
       }
 
+      lastIndex = match.index + match[0].length;
+
+      if (!matchedType) {
+        console.warn("No valid group matched.");
+      }
+    });
+
+    if (lastIndex < line.length) {
+      const remainingText = line.slice(lastIndex);
+      if (remainingText.trim()) {
+        tokens.push({
+          type: 'string',
+          content: remainingText
+        });
+      }
+    }
+
+    return tokens.map(t => this.renderToken(t)).join('');
+  }
+
+
+  //bkp
+  tokenizeBKP(line, grammar) {
+    const combinedRegex = this.generateCombinedRegex(grammar);
+    let tokens = [];
+    let match;
+    let lastIndex = 0;
+    let lastType = 'plain'; // Inicializa com 'plain' como tipo padrão
+
+    // Captura todas as correspondências de uma vez
+    while ((match = combinedRegex.exec(line)) !== null) {
+      if (match.index > lastIndex) {
+        const plainContent = line.slice(lastIndex, match.index);
+        console.log("Plain Content:", plainContent);
+        tokens.push({
+          type: 'string', //lastType, // Usa o último tipo válido
+          content: plainContent
+        });
+      }
+
+      console.log("Matched Groups:", match.groups);
+      let matchedType = null;
+
+      for (const type in match.groups) {
+        if (match.groups[type]) {
+          matchedType = type; // Registra o tipo detectado
+          tokens.push({
+            type,
+            content: match.groups[type]
+          });
+          lastType = type; // Atualiza o tipo válido
+          break;
+        }
+      }
+
+      // Caso nenhum grupo seja válido, mantém o tipo anterior
+      if (!matchedType) {
+        console.warn("No valid group matched. Continuing with last type:", lastType);
+      }
 
       lastIndex = combinedRegex.lastIndex;
     }
 
     if (lastIndex < line.length) {
+      const remainingText = line.slice(lastIndex);
+      console.log("Remaining Text:", remainingText);
       tokens.push({
-        type: 'plain',
-        content: line.slice(lastIndex)
+        type: lastType, // Usa o último tipo válido para o restante
+        content: remainingText
       });
     }
 
     return tokens.map(t => this.renderToken(t)).join('');
   }
+
 
   renderToken(token) {
     const className = `hl-token-${token.type}`;
@@ -295,11 +371,11 @@ class GenixHighlight {
 
     // Caso seja um parêntese associado a uma função
     if (token.type === 'punctuation' && (token.content === '(' || token.content === ')')) {
-        finalClass = `${className} hl-token-function-paren`;
+      finalClass = `${className} hl-token-function-paren`;
     }
 
     return `<span class="${finalClass}">${finalContent}</span>`;
-}
+  }
 
 
   // Escapa caracteres HTML

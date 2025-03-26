@@ -10,6 +10,9 @@
 .hl-token-punctuation {
     color: #7eb1e4;
 }
+.hl-token-punctuation {
+    color: #00bcd4;
+}
 
 .hl-token-attr-name,
 .hl-token-deleted,
@@ -20,19 +23,19 @@
 .hl-token-function-name {
     color: #6196cc;
 }
-.hl-token-object{
+.hl-token-object,.hl-token-properties{
     color: #6196cc;
 }
 
 .hl-token-function,
 .hl-token-number {
-    color: #f08d49;
+    color: #dcbb6d;
 }
 
 .hl-token-class-name,
 .hl-token-constant,
 .hl-token-property,
-.hl-token-symbol {
+.hl-token-symbol,.hl-token-function-paren {
     color: #f8c555;
 }
 
@@ -41,7 +44,7 @@
 .hl-token-important,
 .hl-token-keyword,
 .hl-token-selector,
-.hl-token-tag {
+.hl-token-tag,.hl-token-tag-close {
     color: #cc99cd;
 }
 
@@ -134,7 +137,6 @@ pre[class*=language-] {
     color: #ccc;
     background: 0 0;
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    font-size: 1em;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
