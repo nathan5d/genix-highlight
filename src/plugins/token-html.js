@@ -1,21 +1,11 @@
 function pluginHTMLTokenRegister(Genix, options = {}) {
     const defaultGrammar = {
-        // Captura as tags de abertura e fechamento
-        tag: /<\/?([a-zA-Z][a-zA-Z0-9-]*)\b[^>]*>/g, // Captura tags
-        tagName: /<\/?([a-zA-Z][a-zA-Z0-9-]*)/g, // Captura apenas o nome da tag
-        punctuation: [/^&lt;\/?/, /&gt;$/], // Captura <, > e /
-        
-        // Captura atributos, incluindo atributos booleanos como checked, disabled, etc.
-        attribute: /\b[a-zA-Z-:]+(?=\s*=|\s|\/?>)/g,
-        
-        // Captura o valor dos atributos
-        attributeValue: /=(["'])(.*?)\1/g, // Captura o valor dos atributos, com as aspas
-        
-        // Captura o operador de atribuição "="
-        operator: /=/g,
-
-        // Captura strings dentro dos atributos
-        string: /(["'])(?:(?=(\\?))\2.)*?\1/g
+        tag: /<\/?[a-zA-Z][a-zA-Z0-9-]*\b/g, // Detecta o nome da tag
+        url: /\bhttps?:\/\/[^\s"'<>]+/g, // Detecta URLs
+        attribute: /\b[a-zA-Z-:]+\b(?=\s*=)/g, // Nomes de atributos antes do "="
+        value: /(["'])(?:(?=(\\?))\2.)*?\1/g, // Valores entre aspas
+        operator: /[=]/g, // Operador "="
+        punctuation: /[<>/"]/g, // Caracteres de pontuação
     };
 
     // Permite que o usuário sobrescreva partes da gramática

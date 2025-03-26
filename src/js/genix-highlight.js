@@ -51,10 +51,10 @@ class GenixHighlight {
 
   // Método highlightAll com opções personalizáveis
   highlightAll(options = { showLineNumbers: true, selector: "pre" }) {
-    const selector = `${options.selector || 'pre'} code`;
+    const selector = `${options.selector || 'pre'}`;
     document.querySelectorAll(selector).forEach(block => {
       console.log(`Processing element: ${block.tagName} with class: ${block.className}`);
-      this.highlight(block, options);
+      this.highlight(block, options); // Reutiliza highlight diretamente
     });
   }
 
@@ -66,7 +66,7 @@ class GenixHighlight {
 
     const elements = typeof className === "string"
       ? document.querySelectorAll(className)
-      : (className instanceof Element ? [className] : []); // Só aceita elementos válidos
+      : (className instanceof Element ? [className] : []);
 
     if (!elements.length) {
       console.warn(`No elements found for selector: ${className}`);
@@ -74,81 +74,93 @@ class GenixHighlight {
     }
 
     elements.forEach(element => {
-      const languageClass = Array.from(element.classList)
-        .find(cls => cls.startsWith("language-"))?.split("-")[1];
+      // Busca todos os <code> filhos, caso o elemento não tenha `language-xyz`
+      const codeBlocks = element.querySelectorAll('code');
+      if (codeBlocks.length > 0) {
+        codeBlocks.forEach(codeBlock => {
+          const languageClass = Array.from(codeBlock.classList)
+            .find(cls => cls.startsWith("language-"))?.split("-")[1];
 
-      if (!languageClass) {
-        console.warn(`Language not detected for element with selector: ${className}`);
-        return;
-      }
+          if (!languageClass || !this.languages[languageClass]) {
+            console.warn(`Language '${languageClass}' not registered for element: ${codeBlock.tagName} with class: ${codeBlock.className}`);
+            return;
+          }
 
-      if (element.textContent.trim()) {
-        const rawCode = element.textContent.trim();
-        if (options.showLineNumbers !== undefined) {
-          this.setShowLineNumbers(options.showLineNumbers);
-        }
 
-        element.innerHTML = this.highlightCode(rawCode, languageClass, options);
+          if (codeBlock.textContent.trim()) {
+            const rawCode = codeBlock.textContent.trim();
+            if (options.showLineNumbers !== undefined) {
+              this.setShowLineNumbers(options.showLineNumbers);
+            }
+
+            codeBlock.innerHTML = this.highlightCode(rawCode, languageClass, options);
+          }
+        });
+      } else {
+        console.warn(`No <code> blocks found in element: ${element.tagName} with class: ${element.className}`);
       }
     });
   }
+
+
 
   highlightCode(code, language, options = {}) {
     if (!this.languages[language]) {
       throw new Error(`Language '${language}' not registered. Please register the language before highlighting.`);
     }
-  
+
+
     // Usa createPattern para processar os identificadores
     const errorPattern = this.createPatternError(options.errorIdentifiers || [
       'ERROR_LINE',
       '// TODO',
       '// FIXME'
     ]);
-  
+
     console.log("Compiled Error Pattern:", errorPattern);
-  
+
     if (!errorPattern || !(errorPattern instanceof RegExp)) {
       console.warn("Failed to create a valid error pattern from identifiers.");
       return code; // Retorna o código original caso a expressão falhe
     }
-  
+
     const lines = code.split('\n'); // Divide o código em linhas
-  
+
     const highlightedLines = lines.map((line, index) => {
       const lineNumber = index + 1;
-  
+
       // Testa se a linha contém identificadores de erro
       const isErrorLine = errorPattern.test(line);
-  
+
       // Remove o identificador da linha antes da renderização
       const sanitizedLine = line.replace(errorPattern, '');
-  
+
       // Tokeniza a linha usando a gramática da linguagem
       const tokens = this.tokenize(sanitizedLine, this.languages[language]);
-  
+
       // Define as classes de erro para a linha
       const lineClass = isErrorLine ? 'code-line error-line line-error-indicator' : 'code-line';
       const dataError = isErrorLine ? 'data-error="true"' : '';
       const contentClass = isErrorLine ? 'content-error-indicator' : '';
-  
+
       // Monta a linha renderizada
       let renderLine = `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
         <span class="line-content ${contentClass}">${tokens}</span>
       </div>`;
-  
+
       if (this.showLineNumbers) {
         renderLine = `<div class="${lineClass}" data-line="${lineNumber}" ${dataError}>
           <span class="line-number">${lineNumber}:</span>
           <span class="line-content ${contentClass}">${tokens}</span>
         </div>`;
       }
-  
+
       return renderLine;
     });
-  
+
     return `<div class="code-block">${highlightedLines.join('')}</div>`;
   }
-  
+
 
   createPatternError(token) {
     if (Array.isArray(token)) {
@@ -160,27 +172,70 @@ class GenixHighlight {
         }
         return t;
       });
-  
+
       return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
+
     }
-  
+
     if (typeof token === 'string') {
       if (this.isInvalidPattern(token)) {
         console.warn(`Invalid pattern found: ${token}`);
         return null;
       }
-      return new RegExp(`\\b${token}\\b`, 'g');
+      return new RegExp(`\\${token}\\`, 'g');
     }
-  
+
     if (token instanceof RegExp) {
       return token; // Retorna diretamente se já for uma regex
     }
-  
+
     console.warn("Invalid token format provided.");
     return null;
   }
-  
-  
+  // Cria uma expressão regular a partir de um padrão de token
+  createPattern(token) {
+    if (Array.isArray(token)) {
+      // Cria um padrão consolidado com OR (|) para cada item do array
+      const escapedTokens = token.map(t => {
+        if (typeof t === 'string') {
+          // Escapa caracteres especiais em strings
+          return t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+        }
+        return t;
+      });
+      console.log('array ', token)
+      //return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
+      return new RegExp(`(${escapedTokens.join('|')})`, 'g'); // Removi \b para evitar problemas com bordas
+
+    }
+
+    if (typeof token === 'string') {
+      if (this.isInvalidPattern(token)) {
+        console.warn(`Invalid pattern found: ${token}`);
+        return null;
+      }
+      console.log('string ', token)
+      return new RegExp(`\\b${token}\\b`, 'g');
+    }
+
+    if (token instanceof RegExp) {
+      return token; // Retorna diretamente se já for uma regex
+    }
+
+    console.warn("Invalid token format provided.");
+    return null;
+
+
+
+  }
+
+
+  // Verifica se um padrão é inválido (por exemplo, se contém operadores de incremento)
+  isInvalidPattern(pattern) {
+    return pattern.includes('++') || pattern.includes('**') || pattern.includes('..');
+  }
+
+
 
 
   // Gera uma expressão regular combinada a partir de uma gramática
@@ -206,8 +261,9 @@ class GenixHighlight {
         });
       }
 
+
       for (const type in match.groups) {
-        if (match.groups[type]) {
+        if (match.groups[type]) { // Confirma que o grupo não é undefined
           tokens.push({
             type,
             content: match.groups[type]
@@ -215,6 +271,7 @@ class GenixHighlight {
           break;
         }
       }
+
 
       lastIndex = combinedRegex.lastIndex;
     }
@@ -233,15 +290,17 @@ class GenixHighlight {
     const className = `hl-token-${token.type}`;
     const escapedContent = this.escapeHTML(token.content);
 
-    let lastClass = className;
-    let lastContent = escapedContent;
-    if (token.type === 'line_error') {
-      lastContent = lastContent + ' ⚠️';
-      lastClass = lastClass + ' line-error-indicator';
+    let finalClass = className;
+    let finalContent = escapedContent;
+
+    // Caso seja um parêntese associado a uma função
+    if (token.type === 'punctuation' && (token.content === '(' || token.content === ')')) {
+        finalClass = `${className} hl-token-function-paren`;
     }
 
-    return `<span class="${lastClass}">${lastContent}</span>`;
-  }
+    return `<span class="${finalClass}">${finalContent}</span>`;
+}
+
 
   // Escapa caracteres HTML
   escapeHTML(text) {
@@ -290,41 +349,7 @@ class GenixHighlight {
     });
   }
 
-  
-  // Cria uma expressão regular a partir de um padrão de token
-  createPattern(token) {
-    if (Array.isArray(token)) {
-      return token.map(item => this.createPattern(item)).filter(Boolean);
-    }
 
-    if (typeof token === 'string') {
-      if (this.isInvalidPattern(token)) {
-        console.warn(`Invalid pattern found: ${token}`);
-        return null;
-      }
-      return new RegExp(`\\b${token}\\b`, 'g');
-    }
-
-    if (token instanceof RegExp) {
-      return token;
-    }
-
-    // Verifica se a RegExp é válida
-    try {
-      new RegExp(token);
-    } catch (e) {
-      console.warn(`Invalid regular expression: ${token}`);
-      return null;
-    }
-
-    return null;
-  }
-
-
-  // Verifica se um padrão é inválido (por exemplo, se contém operadores de incremento)
-  isInvalidPattern(pattern) {
-    return pattern.includes('++') || pattern.includes('**') || pattern.includes('..');
-  }
 
 
 }

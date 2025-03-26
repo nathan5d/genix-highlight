@@ -8,7 +8,7 @@
 }
 
 .hl-token-punctuation {
-    color: #ccc;
+    color: #7eb1e4;
 }
 
 .hl-token-attr-name,
@@ -20,8 +20,10 @@
 .hl-token-function-name {
     color: #6196cc;
 }
+.hl-token-object{
+    color: #6196cc;
+}
 
-.hl-token-boolean,
 .hl-token-function,
 .hl-token-number {
     color: #f08d49;
@@ -50,6 +52,7 @@
     color: #7ec699;
 }
 
+.hl-token-boolean,
 .hl-token-entity,
 .hl-token-operator,
 .hl-token-url,
