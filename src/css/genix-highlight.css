@@ -136,7 +136,7 @@ code[class*=language-],
 pre[class*=language-] {
     color: #ccc;
     background: 0 0;
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -265,7 +265,7 @@ span.error-line-indicator {
 
 /* Estilos para blocos de código */
 .code-block {
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
     padding: 10px;
     overflow-x: auto;
 }

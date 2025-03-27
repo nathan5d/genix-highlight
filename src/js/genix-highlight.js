@@ -59,48 +59,44 @@ class GenixHighlight {
   }
 
   highlight(className = null, options = { showLineNumbers: true }) {
+    options = { showLineNumbers: true, ...options }; // Garante que o valor padrão seja usado
     if (!className) {
-      this.highlightAll(options); // Usa highlightAll como fallback
-      return;
+        this.highlightAll(options);
+        return;
     }
 
     const elements = typeof className === "string"
-      ? document.querySelectorAll(className)
-      : (className instanceof Element ? [className] : []);
+        ? document.querySelectorAll(className)
+        : (className instanceof Element ? [className] : []);
 
     if (!elements.length) {
-      console.warn(`No elements found for selector: ${className}`);
-      return;
+        console.warn(`No elements found for selector: ${className}`);
+        return;
     }
 
     elements.forEach(element => {
-      // Busca todos os <code> filhos, caso o elemento não tenha `language-xyz`
-      const codeBlocks = element.querySelectorAll('code');
-      if (codeBlocks.length > 0) {
-        codeBlocks.forEach(codeBlock => {
-          const languageClass = Array.from(codeBlock.classList)
-            .find(cls => cls.startsWith("language-"))?.split("-")[1];
+        const codeBlocks = element.querySelectorAll('code');
+        if (codeBlocks.length > 0) {
+            codeBlocks.forEach(codeBlock => {
+                const languageClass = Array.from(codeBlock.classList)
+                    .find(cls => cls.startsWith("language-"))?.split("-")[1];
 
-          if (!languageClass || !this.languages[languageClass]) {
-            console.warn(`Language '${languageClass}' not registered for element: ${codeBlock.tagName} with class: ${codeBlock.className}`);
-            return;
-          }
+                if (!languageClass || !this.languages[languageClass]) {
+                    console.warn(`Language '${languageClass}' not registered for element: ${codeBlock.tagName} with class: ${codeBlock.className}`);
+                    return;
+                }
 
-
-          if (codeBlock.textContent.trim()) {
-            const rawCode = codeBlock.textContent.trim();
-            if (options.showLineNumbers !== undefined) {
-              this.setShowLineNumbers(options.showLineNumbers);
-            }
-
-            codeBlock.innerHTML = this.highlightCode(rawCode, languageClass, options);
-          }
-        });
-      } else {
-        console.warn(`No <code> blocks found in element: ${element.tagName} with class: ${element.className}`);
-      }
+                if (codeBlock.textContent.trim()) {
+                    const rawCode = codeBlock.textContent.trim();
+                    this.setShowLineNumbers(options.showLineNumbers); // Garante que o valor sempre seja passado corretamente
+                    codeBlock.innerHTML = this.highlightCode(rawCode, languageClass, options);
+                }
+            });
+        } else {
+            console.warn(`No <code> blocks found in element: ${element.tagName} with class: ${element.className}`);
+        }
     });
-  }
+}
 
 
   highlightCode(code, language, options = {}) {
