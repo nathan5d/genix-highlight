@@ -200,7 +200,7 @@ pre[class*=language-].line-numbers {
     position: absolute;
     pointer-events: none;
     top: 0;
-    font-size: 100%;
+    /*font-size: 100%;*/
     left: -3.8em;
     width: 3em;
     letter-spacing: -1px;
