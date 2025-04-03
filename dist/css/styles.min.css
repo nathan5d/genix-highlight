@@ -10,6 +10,7 @@
 .hl-token-punctuation {
     color: #7eb1e4;
 }
+
 .hl-token-punctuation {
     color: #00bcd4;
 }
@@ -23,7 +24,9 @@
 .hl-token-function-name {
     color: #6196cc;
 }
-.hl-token-object,.hl-token-properties{
+
+.hl-token-object,
+.hl-token-properties {
     color: #6196cc;
 }
 
@@ -35,7 +38,8 @@
 .hl-token-class-name,
 .hl-token-constant,
 .hl-token-property,
-.hl-token-symbol,.hl-token-function-paren {
+.hl-token-symbol,
+.hl-token-function-paren {
     color: #f8c555;
 }
 
@@ -44,7 +48,8 @@
 .hl-token-important,
 .hl-token-keyword,
 .hl-token-selector,
-.hl-token-tag,.hl-token-tag-close {
+.hl-token-tag,
+.hl-token-tag-close {
     color: #cc99cd;
 }
 
@@ -83,41 +88,50 @@
 
 /* Tokens específicos para linguagens */
 .hl-token-bash-command {
-    color: #f8c555; /* Comandos do Bash */
+    color: #f8c555;
+    /* Comandos do Bash */
 }
 
 .hl-token-bash-variable {
-    color: #67cdcc; /* Variáveis no Bash */
+    color: #67cdcc;
+    /* Variáveis no Bash */
 }
 
 .hl-token-bash-string {
-    color: #7ec699; /* Strings no Bash */
+    color: #7ec699;
+    /* Strings no Bash */
 }
 
 .hl-token-bash-comment {
-    color: #999; /* Comentários no Bash */
+    color: #999;
+    /* Comentários no Bash */
 }
 
 /* Estilos adicionais para linguagens específicas */
 
 .hl-token-css-selector {
-    color: #8e44ad; /* Seletores no CSS */
+    color: #8e44ad;
+    /* Seletores no CSS */
 }
 
 .hl-token-css-property {
-    color: #2980b9; /* Propriedades no CSS */
+    color: #2980b9;
+    /* Propriedades no CSS */
 }
 
 .hl-token-css-value {
-    color: #27ae60; /* Valores no CSS */
+    color: #27ae60;
+    /* Valores no CSS */
 }
 
 .hl-token-scss-mixin {
-    color: #e67e22; /* Mixins no SCSS */
+    color: #e67e22;
+    /* Mixins no SCSS */
 }
 
 .hl-token-scss-variable {
-    color: #f39c12; /* Variáveis no SCSS */
+    color: #f39c12;
+    /* Variáveis no SCSS */
 }
 
 /* Estilos para tokens comuns a todas as linguagens */
@@ -301,3 +315,10 @@ pre {
     margin-top: 20px;
 }
 
+@supports (-webkit-touch-callout: none) {
+
+    code[class*=language-],
+    pre[class*=language-] {
+        -webkit-text-size-adjust: none;
+    }
+}
